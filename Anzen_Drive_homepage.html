@@ -1,0 +1,315 @@
+<html>
+<head>
+<title>Crash Analysis ACT</title>
+<link rel="shortcut icon" href="./pics/favicon_32.png" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="./rotationStyles.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script>
+
+var currentRotation = 0;
+function test()
+{
+	var weather = document.getElementById("weather");
+	var lighting = document.getElementById("lighting");
+	var road = document.getElementById("road");
+	var time = document.getElementById("time");
+	var suburb = document.getElementById("suburb");
+	
+	var errors = [];
+	if (weather.value == "---")
+		errors.push("Weather Conditions")
+	if (lighting.value == "---")
+		errors.push("Lighting Conditions")
+	if (road.value == "---")
+		errors.push("Road Conditions")
+	if (suburb.value == "---")
+		errors.push("Suburb Conditions")
+	
+	if (errors.length > 0)
+	{
+		alert("Please select options for the following: " + errors.join(", "));
+		return;
+	}
+
+	var date = new Date();
+	var dayOfWeek = date.getDay();
+	if (dayOfWeek == 7)
+		dayOfWeek = 0;
+		
+	var coordinates = suburb.value.split(";");
+	var longitude = parseFloat(coordinates[0]);
+	var latitude = parseFloat(coordinates[1]);
+		
+	var valuesToSend = [weather.value, lighting.value,
+						road.value, dayOfWeek, time.value,
+						longitude, latitude];
+	//alert("Values to send\n" + valuesToSend.toString());
+	
+	
+	// var arrowImage = document.getElementById("imgarrow");
+ //    arrowImage.classList.remove('rot' + currentRotation);
+ //    currentRotation = 1;
+ //    setTimeout(() => {
+	// 	arrowImage.classList.add('rot' + currentRotation);
+	// 	}, 0);
+	
+	
+	$.ajax({
+        type: "POST",
+        data: { params: valuesToSend},
+        url: "http://localhost:5000/",
+        success: function(result){
+            var arrowImage = document.getElementById("imgarrow");
+            arrowImage.classList.remove('rot' + currentRotation);
+            currentRotation = result;
+            setTimeout(() => {
+                arrowImage.classList.add('rot' + currentRotation);
+            }, 0);
+        },
+        error: function(err){
+           //alert("An error occured: " + err.status + " " + err.statusText);
+       }
+    });
+}
+</script>
+</head>
+<body style="position:relative;margin:5px 20px;">
+<div class='big-container'>
+	<div class="container">
+		<div class="row justify-content-center title">
+			<h2 class="title">Anzen Drive - Crash Analysis for the ACT </h2>
+			<img src="pics/Safety First.png" alt="Group Logo" height="42" width="42">
+		</div>
+	</div>
+	<div><h3 class="question">Input your driving conditions:</h3></div>
+	<div class="d-flex flex-row justify-content-center">
+		<div class="p-2">
+			<label>Weather Conditions</label>
+			<select id="weather" name="weather">
+				<option>---</option>
+				<option value="0">Fine</option>
+				<option value="1">Cloudy/Overcast</option>
+				<!-- <option value="2"></option> -->
+				<option value="4">Fog</option>
+				<option value="5">Smoke/Dust</option>
+				<option value="6">Light rain</option>
+				<option value="7">Heavy rain</option>
+				<option value="8">Snow/Sleet</option>
+				
+				<option value="3">Other</option>
+			</select>
+		</div>
+
+		<div class="p-2">
+			<label>Lighting Conditions</label>
+			<select id="lighting" name="lighting">
+				<option>---</option>
+				<option value="0">Daylight</option>
+				<option value="1">Semi-Darkness</option>
+				<option value="3">Dark - good street lighting</option>
+				<option value="4">Dark - poor street lighting</option>
+				<option value="5">Dark - no street lights</option>
+			</select>
+		</div>
+
+		<div class="p-2">
+			<label>Road Conditions</label>
+			<select id="road" name="road">
+				<option>---</option>
+				<option value="0">Good dry surface</option>
+				<option value="1">Loose surface</option>
+				<option value="3">Wet Surface</option>
+				<option value="4">Snow/Ice</option>
+				<option value="5">Muddy/Oily surface</option>
+			</select>
+		</div>
+	</div>
+
+	<div  class="d-flex flex-row justify-content-center">
+		<div class="p-2" >
+			<label>Time of day</label>
+			<select id="time" name="time">
+				<option>---</option>
+				<option value="1">Morning (6am-12pm)</option>
+				<option value="2">Afternoon (12pm-4pm)</option>
+				<option value="3">Evening (4pm-8pm)</option>
+				<option value="4">Night (8pm-6am)</option>
+			</select>
+		</div>
+
+		<div class="p-2" >
+			<label>Suburb</label>
+			<select id="suburb" name="suburb">
+				<option>---</option>
+				<option value="-35.25479107;149.1487903">ACTON</option>
+				<option value="-35.25052019;149.1568751">AINSLIE</option>
+				<option value="-35.16244132;149.1936138">AMAROO</option>
+				<option value="-35.25029285;149.1487903">ARANDA</option>
+				<option value="-35.25479107;149.1487903">BANKS</option>
+				<option value="-35.25479107;149.1523031">BARTON</option>
+				<option value="-35.25479107;149.213014">BEARD</option>
+				<option value="-35.18365315;149.1487903">BELCONNEN</option>
+				<option value="-35.15209816;149.1532374">BONNER</option>
+				<option value="-35.25479107;149.1487903">BONYTHON</option>
+				<option value="-35.25451053;149.1487903">BRADDON</option>
+				<option value="-35.22631334;149.1487903">BRUCE</option>
+				<option value="-35.25479107;149.1487903">CALWELL</option>
+				<option value="-35.21495217;149.1772521">CAMPBELL</option>
+				<option value="-35.28674465;149.2053094">CANBERRA AIRPORT</option>
+				<option value="-35.25479107;149.1487903">CAPITAL HILL</option>
+				<option value="-35.15487902;149.1487903">CASEY</option>
+				<option value="-35.25479107;149.1487903">CHAPMAN</option>
+				<option value="-35.19365392;149.1487903">CHARNWOOD</option>
+				<option value="-35.25479107;149.1487903">CHIFLEY</option>
+				<option value="-35.25479107;149.1487903">CHISHOLM</option>
+				<option value="-35.25479107;149.163847">CITY</option>
+				<option value="-35.25479107;149.1487903">CONDER</option>
+				<option value="-35.18913753;149.1487903">COOK</option>
+				<option value="-35.25479107;149.1487903">COOMBS</option>
+				<option value="-35.18762513;149.1487903">CRACE</option>
+				<option value="-35.25479107;149.1487903">CURTIN</option>
+				<option value="-35.25479107;149.1487903">DEAKIN</option>
+				<option value="-35.25479107;149.1487903">DENMAN PROSPECT</option>
+				<option value="-35.24639826;149.15543">DICKSON</option>
+				<option value="-35.23596062;149.1542698">DOWNER</option>
+				<option value="-35.25479107;149.1487903">DUFFY</option>
+				<option value="-35.18512057;149.1487903">DUNLOP</option>
+				<option value="-35.19992211;149.1487903">EVATT</option>
+				<option value="-35.25479107;149.1487903">FADDEN</option>
+				<option value="-35.25479107;149.1487903">FARRER</option>
+				<option value="-35.25479107;149.1487903">FISHER</option>
+				<option value="-35.21745512;149.1487903">FLOREY</option>
+				<option value="-35.19649941;149.1487903">FLYNN</option>
+				<option value="-35.15426477;149.1552142">FORDE</option>
+				<option value="-35.25479107;149.1631962">FORREST</option>
+				<option value="-35.18708439;149.1510407">FRANKLIN</option>
+				<option value="-35.18531853;149.1487903">FRASER</option>
+				<option value="-35.25479107;149.1875086">FYSHWICK</option>
+				<option value="-35.25479107;149.1487903">GARRAN</option>
+				<option value="-35.25479107;149.1487903">GILMORE</option>
+				<option value="-35.20135068;149.1487903">GIRALANG</option>
+				<option value="-35.22765211;149.1487903">GORDON</option>
+				<option value="-35.25479107;149.1487903">GOWRIE</option>
+				<option value="-35.25479107;149.1487903">GREENWAY</option>
+				<option value="-35.25479107;149.1517034">GRIFFITH</option>
+				<option value="-35.17408389;149.1975175">GUNGAHLIN</option>
+				<option value="-35.24113449;149.165941">HACKETT</option>
+				<option value="-35.1598572;149.1487903">HALL</option>
+				<option value="-35.18143122;149.1654861">HARRISON</option>
+				<option value="-35.23963831;149.1487903">HAWKER</option>
+				<option value="-35.21619292;149.1487903">HIGGINS</option>
+				<option value="-35.25479107;149.1487903">HOLDER</option>
+				<option value="-35.21791944;149.1487903">HOLT</option>
+				<option value="-35.25479107;149.1487903">HUGHES</option>
+				<option value="-35.25479107;149.1846991">HUME</option>
+				<option value="-35.25479107;149.1487903">ISAACS</option>
+				<option value="-35.25479107;149.1487903">ISABELLA PLAINS</option>
+				<option value="-35.15793647;149.1332407">JACKA</option>
+				<option value="-35.21037059;149.1487903">KALEEN</option>
+				<option value="-35.25479107;149.1487903">KAMBAH</option>
+				<option value="-35.18173642;149.1487903">KENNY</option>
+				<option value="-35.25479107;149.153902">KINGSTON</option>
+				<option value="-35.20559781;149.1487903">LATHAM</option>
+				<option value="-35.21635517;149.1487903">LAWSON</option>
+				<option value="-35.20977635;149.1507271">LYNEHAM</option>
+				<option value="-35.25479107;149.1487903">LYONS</option>
+				<option value="-35.25479107;149.1487903">MACARTHUR</option>
+				<option value="-35.19732507;149.1487903">MACGREGOR</option>
+				<option value="-35.24370473;149.1487903">MACQUARIE</option>
+				<option value="-35.25479107;149.1487903">MAWSON</option>
+				<option value="-35.2091911;149.1487903">MCKELLAR</option>
+				<option value="-35.20182926;149.1487903">MELBA</option>
+				<option value="-35.20506858;149.152263">MITCHELL</option>
+				<option value="-35.25479107;149.1487903">MOLONGLO</option>
+				<option value="-35.25479107;149.1487903">MONASH</option>
+				<option value="-35.15243221;149.1487903">MONCRIEFF</option>
+				<option value="-35.25479107;149.1628077">NARRABUNDAH</option>
+				<option value="-35.15671294;149.1487903">NGUNNAWAL</option>
+				<option value="-35.17571503;149.1487903">NICHOLLS</option>
+				<option value="-35.24340063;149.1487903">O'CONNOR</option>
+				<option value="-35.25479107;149.1487903">O'MALLEY</option>
+				<option value="-35.25479107;149.2304425">OAKS ESTATE</option>
+				<option value="-35.25479107;149.1487903">OXLEY</option>
+				<option value="-35.23154035;149.1487903">PAGE</option>
+				<option value="-35.1862077;149.1487903">PALMERSTON</option>
+				<option value="-35.25479107;149.1487903">PARKES</option>
+				<option value="-35.25479107;149.1487903">PEARCE</option>
+				<option value="-35.25479107;149.1487903">PHILLIP</option>
+				<option value="-35.25479107;149.2304423">PIALLIGO</option>
+				<option value="-35.25479107;149.1487903">RED HILL</option>
+				<option value="-35.25479107;149.1487903">REID</option>
+				<option value="-35.25479107;149.1487903">RICHARDSON</option>
+				<option value="-35.25479107;149.1487903">RIVETT</option>
+				<option value="-35.17838115;149.0953238">RURAL - BELCONNEN</option>
+				<option value="-35.60088831;149.0618175">RURAL - BOOTH</option>
+				<option value="-35.24849559;149.1487903">RURAL - CANBERRA CENTRAL</option>
+				<option value="-35.23140983;149.1487903">RURAL - COREE</option>
+				<option value="-35.25479107;149.1487903">RURAL - COTTER</option>
+				<option value="-35.15193096;149.2000971">RURAL - GUNGAHLIN</option>
+				<option value="-35.16083061;149.1487903">RURAL - HALL</option>
+				<option value="-35.25479107;149.2217779">RURAL - JERRABOMBERRA</option>
+				<option value="-35.25479107;149.3962112">RURAL - KOWEN</option>
+				<option value="-35.20600023;149.2630708">RURAL - MAJURA</option>
+				<option value="-35.25479107;149.1487903">RURAL - MOLONGLO VALLEY</option>
+				<option value="-35.25479107;149.1487903">RURAL - MOUNT CLEAR</option>
+				<option value="-35.25479107;149.1487903">RURAL - PADDYS  RIVER</option>
+				<option value="-35.25479107;149.1487903">RURAL - RENDEZVOUS CREEK</option>
+				<option value="-35.24264613;149.1487903">RURAL - STROMLO</option>
+				<option value="-35.25479107;149.1487903">RURAL - TENNENT</option>
+				<option value="-35.25479107;149.1531973">RURAL - TUGGERANONG</option>
+				<option value="-35.25479107;149.1487903">RURAL - WESTON CREEK</option>
+				<option value="-35.34781018;149.0734564">RURAL - WODEN VALLEY</option>
+				<option value="-35.25479107;149.162165">RUSSELL</option>
+				<option value="-35.22784882;149.1487903">SCULLIN</option>
+				<option value="-35.1922667;149.1487903">SPENCE</option>
+				<option value="-35.30749543;149.1244066">STIRLING</option>
+				<option value="-35.25479107;149.1983546">SYMONSTON</option>
+				<option value="-35.25479107;149.1487903">THARWA</option>
+				<option value="-35.25479107;149.1487903">THEODORE</option>
+				<option value="-35.18250669;149.1672435">THROSBY</option>
+				<option value="-35.25479107;149.1487903">TORRENS</option>
+				<option value="-35.25479107;149.1487903">TURNER</option>
+				<option value="-35.29108028;148.9255899">URIARRA VILLAGE</option>
+				<option value="-35.25479107;149.1487903">WANNIASSA</option>
+			</select>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row justify-content-center">
+
+			<button  type="button" onclick="test()">Calculate</button>
+		</div>
+	</div>
+
+<hr/>
+
+	<div class='container'>
+			
+
+		
+
+		<div class="row" style="position:relative;">
+			<img id="imgarrow" class="" src="./pics/pointer.png" alt="" style="position:absolute;z-index:1;left:300px; width: 250px; bottom:-310px"/>
+			
+			<img src="./pics/indicatorbackground.png" alt="" style="position:absolute; width:400px; left:230px"/>
+		</div>
+
+		<div style="position:relative;top:200px;">
+			<div class="explain">
+				<h3 style="margin-left:50px">Result</h3>
+
+				<p>This is just a measure of the most likely crashes that will occur in the conditions you're currently driving.  Essentially it's a type of measure of risk you are taking if you were to drive now in these conditions. </p>
+
+				<p>A machine learning algorithm computes the factors you enter against all recorded accident cases in the ACT since 2012 (That's over 50,000 previous crashes).  Currently the system is configured to only use the factors you enter into this website but the algorithm is scalable.</p>
+
+				<p>The power of this algorithm is only limited by the factors provided to it, the more data given the stronger it becomes.  If we give it more precise data such as car models associated with accidents, types of drivers, more exact time, crash location etc.  We could greatly improve the accury of algorithm. </p>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+</body>
+</html>

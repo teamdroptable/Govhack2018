@@ -1,0 +1,57 @@
+@-moz-keyframes spin1 { 100% { -moz-transform: rotate(30deg); } }
+@-webkit-keyframes spin1 { 100% { -webkit-transform: rotate(30deg); } }
+@keyframes spin1 { 100% { -webkit-transform: rotate(30deg); transform:rotate(30deg); } }
+
+@-moz-keyframes spin2 { 100% { -moz-transform: rotate(90deg); } }
+@-webkit-keyframes spin2 { 100% { -webkit-transform: rotate(90deg); } }
+@keyframes spin2 { 100% { -webkit-transform: rotate(90deg); transform:rotate(90deg); } }
+
+@-moz-keyframes spin3 { 100% { -moz-transform: rotate(150deg); } }
+@-webkit-keyframes spin3 { 100% { -webkit-transform: rotate(150deg); } }
+@keyframes spin3 { 100% { -webkit-transform: rotate(150deg); transform:rotate(150deg); } }
+
+@-moz-keyframes spin4 { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin4 { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin4 { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+.rot1 {
+	-webkit-animation:spin1 1s forwards 0s;
+    -moz-animation:spin1 1s forwards 0s;
+    animation:spin1 1s forwards 0s;
+}
+
+.rot2 {
+	-webkit-animation:spin2 2s forwards 0s;
+    -moz-animation:spin2 2s forwards 0s;
+    animation:spin2 2s forwards 0s;
+}
+
+.rot3 {
+	 -webkit-animation:spin3 3s forwards 0s;
+    -moz-animation:spin3 3s forwards 0s;
+    animation:spin3 3s forwards 0s;
+}
+
+.rot4 {
+	-webkit-animation:spin4 2s forwards 0s;
+    -moz-animation:spin4 2s forwards 0s;
+    animation:spin4 2s forwards 0s;
+}
+
+body {
+    background: url("pics/background.jpg");
+}
+
+.big-container{
+    background-color: rgba(240,240,240,0.9);
+    height:870px;
+    border-radius: 5px
+}
+
+.title{
+    text-decoration: underline;
+}
+
+.question{
+    margin-left:30px;
+}
